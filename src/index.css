@@ -136,7 +136,7 @@ All colors MUST be HSL.
   }
   
   .team-card {
-    @apply card-glow p-6 text-center group cursor-pointer overflow-hidden relative;
+    @apply card-glow p-6 text-center cursor-pointer overflow-hidden relative;
   }
   
   .event-card {

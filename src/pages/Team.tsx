@@ -127,7 +127,7 @@ const Team = () => {
                   return (
                     <div
                       key={`${member.id}-${currentIndex}`}
-                      className={`team-card transition-all duration-500 ${
+                      className={`team-card group transition-all duration-500 ${
                         isCenter 
                           ? 'scale-110 z-10 opacity-100' 
                           : 'scale-90 opacity-60'
