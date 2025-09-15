@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CalendarIcon, MapPinIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
+import { EventGallery } from "@/components/EventGallery";
 
 const eventsData = {
   ongoing: [
@@ -14,7 +15,8 @@ const eventsData = {
       description: "A day-long event featuring groundbreaking innovations and startup pitches.",
       image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=300&fit=crop",
       status: "ongoing" as const,
-      ticketsAvailable: true
+      ticketsAvailable: true,
+      galleryImages: []
     }
   ],
   upcoming: [
@@ -27,7 +29,8 @@ const eventsData = {
       description: "Exploring the frontiers of artificial intelligence and emerging technologies.",
       image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=300&fit=crop",
       status: "upcoming" as const,
-      ticketsAvailable: true
+      ticketsAvailable: true,
+      galleryImages: []
     },
     {
       id: 3,
@@ -38,7 +41,8 @@ const eventsData = {
       description: "Discussing sustainable practices and environmental innovations.",
       image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
       status: "upcoming" as const,
-      ticketsAvailable: true
+      ticketsAvailable: true,
+      galleryImages: []
     }
   ],
   completed: [
@@ -51,7 +55,13 @@ const eventsData = {
       description: "Celebrating creativity across various artistic and scientific domains.",
       image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop",
       status: "completed" as const,
-      ticketsAvailable: false
+      ticketsAvailable: false,
+      galleryImages: [
+        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=600&fit=crop"
+      ]
     },
     {
       id: 5,
@@ -62,7 +72,12 @@ const eventsData = {
       description: "Interactive sessions on modern leadership principles and practices.",
       image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=300&fit=crop",
       status: "completed" as const,
-      ticketsAvailable: false
+      ticketsAvailable: false,
+      galleryImages: [
+        "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop"
+      ]
     },
     {
       id: 6,
@@ -73,7 +88,11 @@ const eventsData = {
       description: "Understanding the digital revolution and its impact on society.",
       image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop",
       status: "completed" as const,
-      ticketsAvailable: false
+      ticketsAvailable: false,
+      galleryImages: [
+        "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop"
+      ]
     }
   ]
 };
@@ -82,6 +101,18 @@ type EventStatus = "ongoing" | "upcoming" | "completed";
 
 const Events = () => {
   const [activeFilter, setActiveFilter] = useState<EventStatus>("upcoming");
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<typeof eventsData.completed[0] | null>(null);
+
+  const openGallery = (event: typeof eventsData.completed[0]) => {
+    setSelectedEvent(event);
+    setGalleryOpen(true);
+  };
+
+  const closeGallery = () => {
+    setGalleryOpen(false);
+    setSelectedEvent(null);
+  };
 
   const getStatusColor = (status: EventStatus) => {
     switch (status) {
@@ -188,7 +219,16 @@ const Events = () => {
                   </Link>
                 )}
                 
-                {!event.ticketsAvailable && (
+                {!event.ticketsAvailable && event.status === "completed" && (
+                  <Button 
+                    onClick={() => openGallery(event as typeof eventsData.completed[0])}
+                    className="w-full mb-2 bg-muted hover:bg-muted/80 text-foreground"
+                  >
+                    Event Pictures
+                  </Button>
+                )}
+                
+                {!event.ticketsAvailable && event.status === "completed" && (
                   <Button disabled className="w-full">
                     Event Completed
                   </Button>
@@ -224,6 +264,16 @@ const Events = () => {
           </Link>
         </div>
       </section>
+
+      {/* Event Gallery Modal */}
+      {selectedEvent && (
+        <EventGallery
+          isOpen={galleryOpen}
+          onClose={closeGallery}
+          eventTitle={selectedEvent.title}
+          images={selectedEvent.galleryImages}
+        />
+      )}
     </div>
   );
 };

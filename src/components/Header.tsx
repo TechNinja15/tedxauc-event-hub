@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import tedxaucLogo from "@/assets/tedxauc-logo.jpg";
+import tedxaucLogo from "@/assets/tedxauc-logo-new.png";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -65,7 +65,7 @@ export const Header = () => {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
             to="/donate"
-            className="hero-button"
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
           >
             Donate
           </Link>
@@ -107,7 +107,7 @@ export const Header = () => {
               <div className="py-6">
                 <Link
                   to="/donate"
-                  className="hero-button block text-center"
+                  className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors block text-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Donate
