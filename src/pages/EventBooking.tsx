@@ -63,12 +63,11 @@ const EventBooking = () => {
     regularRows.forEach((row) => {
       for (let i = 1; i <= 28; i++) {
         const seatId = `${row}${i}`;
-        const isBooked = Math.random() < 0.3; // 30% seats pre-booked
         seats.push({
           id: seatId,
           row,
           number: i,
-          status: isBooked ? "booked" : "available",
+          status: "available",
           price: event?.price || 500
         });
       }
@@ -79,12 +78,11 @@ const EventBooking = () => {
     backRows.forEach((row) => {
       for (let i = 1; i <= 22; i++) {
         const seatId = `${row}${i}`;
-        const isBooked = Math.random() < 0.3; // 30% seats pre-booked
         seats.push({
           id: seatId,
           row,
           number: i,
-          status: isBooked ? "booked" : "available",
+          status: "available",
           price: event?.price || 500
         });
       }
@@ -92,13 +90,11 @@ const EventBooking = () => {
 
     // Last line seats
     for (let i = 1; i <= 20; i++) {
-      const seatId = `L${i}`;
-      const isBooked = Math.random() < 0.3;
       seats.push({
         id: `LAST${i}`,
         row: "LAST",
         number: i,
-        status: isBooked ? "booked" : "available",
+        status: "available",
         price: event?.price || 500
       });
     }
@@ -265,6 +261,9 @@ const EventBooking = () => {
                     <span className="w-8 text-center font-bold text-muted-foreground">{row}</span>
                   </div>
                 ))}
+                
+                {/* Spacing between sections */}
+                <div className="h-8"></div>
                 
                 {/* Rows J-M */}
                 {["J", "K", "L", "M"].map((row) => (
