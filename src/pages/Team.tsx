@@ -161,19 +161,17 @@ const Team = () => {
                   return (
                     <div
                       key={`${member.id}-${currentIndex}`}
-                      className={`team-card group transition-all duration-500 ${
+                      className={`team-card group transition-all duration-700 ease-in-out transform ${
                         isCenter 
-                          ? 'scale-110 z-10 opacity-100' 
+                          ? 'scale-110 z-10 opacity-100 translate-x-0' 
                           : 'scale-90 opacity-60'
                       } ${
-                        index === 0 ? 'animate-slide-right' : 
-                        index === 2 ? 'animate-slide-left' : 
-                        'animate-fade-in'
+                        isAnimating ? 'animate-[slideRightToLeft_0.7s_ease-in-out]' : ''
                       }`}
                       style={{
-                        animationDelay: `${index * 0.1}s`,
                         width: '300px',
-                        minWidth: '300px'
+                        minWidth: '300px',
+                        transform: isAnimating ? 'translateX(-100%)' : 'translateX(0)',
                       }}
                       onMouseEnter={() => setIsPaused(true)}
                       onMouseLeave={() => setIsPaused(false)}
