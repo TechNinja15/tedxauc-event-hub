@@ -54,14 +54,14 @@ const EventBooking = () => {
 
   const event = eventDetails[Number(eventId) as keyof typeof eventDetails];
 
-  // Generate seat layout (similar to BookMyShow)
+  // Generate seat layout matching the theater arrangement
   const generateSeats = (): Seat[] => {
     const seats: Seat[] = [];
-    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
-    const seatsPerRow = 12;
-
-    rows.forEach((row) => {
-      for (let i = 1; i <= seatsPerRow; i++) {
+    
+    // Rows A-I: seats 1-14 on left, 15-28 on right
+    const regularRows = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    regularRows.forEach((row) => {
+      for (let i = 1; i <= 28; i++) {
         const seatId = `${row}${i}`;
         const isBooked = Math.random() < 0.3; // 30% seats pre-booked
         seats.push({
@@ -73,6 +73,35 @@ const EventBooking = () => {
         });
       }
     });
+
+    // Rows J-M: 1-4 on left, 5-18 in middle, 19-22 on right
+    const backRows = ["J", "K", "L", "M"];
+    backRows.forEach((row) => {
+      for (let i = 1; i <= 22; i++) {
+        const seatId = `${row}${i}`;
+        const isBooked = Math.random() < 0.3; // 30% seats pre-booked
+        seats.push({
+          id: seatId,
+          row,
+          number: i,
+          status: isBooked ? "booked" : "available",
+          price: event?.price || 500
+        });
+      }
+    });
+
+    // Last line seats
+    for (let i = 1; i <= 20; i++) {
+      const seatId = `L${i}`;
+      const isBooked = Math.random() < 0.3;
+      seats.push({
+        id: `LAST${i}`,
+        row: "LAST",
+        number: i,
+        status: isBooked ? "booked" : "available",
+        price: event?.price || 500
+      });
+    }
 
     return seats;
   };
@@ -186,32 +215,138 @@ const EventBooking = () => {
             {/* Screen */}
             <div className="mb-8 text-center">
               <div className="inline-block bg-gradient-to-r from-primary/20 to-primary/10 px-8 py-2 rounded-t-3xl">
-                <span className="text-lg font-semibold gradient-text">SCREEN THIS WAY</span>
+                <span className="text-lg font-semibold gradient-text">screening here</span>
               </div>
             </div>
 
             {/* Seat Map */}
-            <div className="max-w-4xl mx-auto">
-              <div className="grid gap-2 mb-8">
-                {["A", "B", "C", "D", "E", "F", "G", "H"].map((row) => (
-                  <div key={row} className="flex items-center justify-center gap-2">
+            <div className="max-w-6xl mx-auto">
+              <div className="space-y-2 mb-8">
+                {/* Rows A-I */}
+                {["A", "B", "C", "D", "E", "F", "G", "H", "I"].map((row) => (
+                  <div key={row} className="flex items-center justify-center gap-4">
                     <span className="w-8 text-center font-bold text-muted-foreground">{row}</span>
-                    <div className="grid grid-cols-12 gap-1">
+                    
+                    {/* Seats 1-14 */}
+                    <div className="flex gap-1">
                       {seats
-                        .filter(seat => seat.row === row)
+                        .filter(seat => seat.row === row && seat.number >= 1 && seat.number <= 14)
                         .map((seat) => (
                           <button
                             key={seat.id}
                             onClick={() => handleSeatClick(seat.id)}
-                            className={`w-8 h-8 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
+                            className={`w-6 h-6 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
                             disabled={seat.status === "booked"}
                           >
                             {seat.number}
                           </button>
                         ))}
                     </div>
+                    
+                    {/* Gap */}
+                    <div className="w-8"></div>
+                    
+                    {/* Seats 15-28 */}
+                    <div className="flex gap-1">
+                      {seats
+                        .filter(seat => seat.row === row && seat.number >= 15 && seat.number <= 28)
+                        .map((seat) => (
+                          <button
+                            key={seat.id}
+                            onClick={() => handleSeatClick(seat.id)}
+                            className={`w-6 h-6 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
+                            disabled={seat.status === "booked"}
+                          >
+                            {seat.number}
+                          </button>
+                        ))}
+                    </div>
+                    
+                    <span className="w-8 text-center font-bold text-muted-foreground">{row}</span>
                   </div>
                 ))}
+                
+                {/* Rows J-M */}
+                {["J", "K", "L", "M"].map((row) => (
+                  <div key={row} className="flex items-center justify-center gap-4">
+                    <span className="w-8 text-center font-bold text-muted-foreground">{row}</span>
+                    
+                    {/* Seats 1-4 */}
+                    <div className="flex gap-1">
+                      {seats
+                        .filter(seat => seat.row === row && seat.number >= 1 && seat.number <= 4)
+                        .map((seat) => (
+                          <button
+                            key={seat.id}
+                            onClick={() => handleSeatClick(seat.id)}
+                            className={`w-6 h-6 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
+                            disabled={seat.status === "booked"}
+                          >
+                            {seat.number}
+                          </button>
+                        ))}
+                    </div>
+                    
+                    {/* Gap */}
+                    <div className="w-8"></div>
+                    
+                    {/* Seats 5-18 */}
+                    <div className="flex gap-1">
+                      {seats
+                        .filter(seat => seat.row === row && seat.number >= 5 && seat.number <= 18)
+                        .map((seat) => (
+                          <button
+                            key={seat.id}
+                            onClick={() => handleSeatClick(seat.id)}
+                            className={`w-6 h-6 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
+                            disabled={seat.status === "booked"}
+                          >
+                            {seat.number}
+                          </button>
+                        ))}
+                    </div>
+                    
+                    {/* Gap */}
+                    <div className="w-8"></div>
+                    
+                    {/* Seats 19-22 */}
+                    <div className="flex gap-1">
+                      {seats
+                        .filter(seat => seat.row === row && seat.number >= 19 && seat.number <= 22)
+                        .map((seat) => (
+                          <button
+                            key={seat.id}
+                            onClick={() => handleSeatClick(seat.id)}
+                            className={`w-6 h-6 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
+                            disabled={seat.status === "booked"}
+                          >
+                            {seat.number}
+                          </button>
+                        ))}
+                    </div>
+                    
+                    <span className="w-8 text-center font-bold text-muted-foreground">{row}</span>
+                  </div>
+                ))}
+                
+                {/* Last Line */}
+                <div className="flex items-center justify-center gap-4 pt-4 border-t border-dashed border-border">
+                  <div className="flex gap-1">
+                    {seats
+                      .filter(seat => seat.row === "LAST")
+                      .map((seat) => (
+                        <button
+                          key={seat.id}
+                          onClick={() => handleSeatClick(seat.id)}
+                          className={`w-6 h-6 rounded text-xs font-bold transition-all duration-200 ${getSeatColor(seat)}`}
+                          disabled={seat.status === "booked"}
+                        >
+                          {seat.number}
+                        </button>
+                      ))}
+                  </div>
+                  <span className="text-sm text-muted-foreground">last line</span>
+                </div>
               </div>
 
               {/* Legend */}
