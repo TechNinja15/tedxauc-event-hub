@@ -89,7 +89,7 @@ const EventBooking = () => {
     });
 
     // Last line seats
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 9; i++) {
       seats.push({
         id: `LAST${i}`,
         row: "LAST",

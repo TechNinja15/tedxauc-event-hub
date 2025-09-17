@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 const teamMembers = [
   {
@@ -7,56 +8,89 @@ const teamMembers = [
     name: "Arjun Sharma",
     position: "Event Director",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-    bio: "Leading the vision and strategy for TEDxAUC events."
+    bio: "Leading the vision and strategy for TEDxAUC events.",
+    social: {
+      instagram: "https://instagram.com/arjun.sharma",
+      facebook: "https://facebook.com/arjun.sharma",
+      linkedin: "https://linkedin.com/in/arjun-sharma"
+    }
   },
   {
     id: 2,
     name: "Priya Patel",
     position: "Creative Head",
     image: "https://images.unsplash.com/photo-1494790108755-2616b332e234?w=400&h=400&fit=crop&crop=face",
-    bio: "Bringing creative excellence to every aspect of our events."
+    bio: "Bringing creative excellence to every aspect of our events.",
+    social: {
+      instagram: "https://instagram.com/priya.patel",
+      facebook: "https://facebook.com/priya.patel",
+      linkedin: "https://linkedin.com/in/priya-patel"
+    }
   },
   {
     id: 3,
     name: "Rahul Gupta",
     position: "Technical Lead",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
-    bio: "Ensuring flawless technical execution of our events."
+    bio: "Ensuring flawless technical execution of our events.",
+    social: {
+      instagram: "https://instagram.com/rahul.gupta",
+      facebook: "https://facebook.com/rahul.gupta",
+      linkedin: "https://linkedin.com/in/rahul-gupta"
+    }
   },
   {
     id: 4,
     name: "Sneha Singh",
     position: "Marketing Head",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
-    bio: "Spreading the word and building our community."
+    bio: "Spreading the word and building our community.",
+    social: {
+      instagram: "https://instagram.com/sneha.singh",
+      facebook: "https://facebook.com/sneha.singh",
+      linkedin: "https://linkedin.com/in/sneha-singh"
+    }
   },
   {
     id: 5,
     name: "Vikram Kumar",
     position: "Operations Manager",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
-    bio: "Managing all operational aspects and logistics."
+    bio: "Managing all operational aspects and logistics.",
+    social: {
+      instagram: "https://instagram.com/vikram.kumar",
+      facebook: "https://facebook.com/vikram.kumar",
+      linkedin: "https://linkedin.com/in/vikram-kumar"
+    }
   },
   {
     id: 6,
     name: "Ananya Joshi",
     position: "Content Curator",
     image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
-    bio: "Curating compelling stories and content for our platform."
+    bio: "Curating compelling stories and content for our platform.",
+    social: {
+      instagram: "https://instagram.com/ananya.joshi",
+      facebook: "https://facebook.com/ananya.joshi",
+      linkedin: "https://linkedin.com/in/ananya-joshi"
+    }
   }
 ];
 
 const Team = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
+    
     const interval = setInterval(() => {
       nextSlide();
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, [currentIndex, isPaused]);
 
   const nextSlide = () => {
     if (isAnimating) return;
@@ -141,6 +175,8 @@ const Team = () => {
                         width: '300px',
                         minWidth: '300px'
                       }}
+                      onMouseEnter={() => setIsPaused(true)}
+                      onMouseLeave={() => setIsPaused(false)}
                     >
                       <div className="relative mb-6">
                         <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-primary/20 group-hover:border-primary/50 transition-all duration-300">
@@ -163,9 +199,37 @@ const Team = () => {
                         {member.position}
                       </p>
                       
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed mb-6">
                         {member.bio}
                       </p>
+                      
+                      {/* Social Media Buttons */}
+                      <div className="flex justify-center gap-3 mb-4">
+                        <a
+                          href={member.social.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                        >
+                          <Instagram className="h-4 w-4" />
+                        </a>
+                        <a
+                          href={member.social.facebook}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                        >
+                          <Facebook className="h-4 w-4" />
+                        </a>
+                        <a
+                          href={member.social.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                        >
+                          <Linkedin className="h-4 w-4" />
+                        </a>
+                      </div>
                       
                       {/* Decorative elements */}
                       <div className="absolute top-4 right-4 w-12 h-12 bg-primary/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
