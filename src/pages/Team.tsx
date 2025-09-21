@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const teamMembers = [
   {
@@ -78,43 +77,6 @@ const teamMembers = [
 ];
 
 const Team = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (isPaused) return;
-    
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [currentIndex, isPaused]);
-
-  const nextSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((prev) => (prev + 1) % teamMembers.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
-
-  const prevSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((prev) => (prev - 1 + teamMembers.length) % teamMembers.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
-
-  const getVisibleMembers = () => {
-    const visible = [];
-    for (let i = 0; i < 3; i++) {
-      const index = (currentIndex + i) % teamMembers.length;
-      visible.push({ ...teamMembers[index], displayIndex: i });
-    }
-    return visible;
-  };
-
   return (
     <div className="pt-24">
       {/* Hero Section */}
@@ -132,133 +94,65 @@ const Team = () => {
         </div>
       </section>
 
-      {/* Team Carousel */}
+      {/* Team Cards Grid */}
       <section className="section-padding">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="relative">
-            {/* Navigation Buttons */}
-            <button
-              onClick={prevSlide}
-              disabled={isAnimating}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ChevronLeftIcon className="h-6 w-6" />
-            </button>
-            
-            <button
-              onClick={nextSlide}
-              disabled={isAnimating}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ChevronRightIcon className="h-6 w-6" />
-            </button>
-
-            {/* Team Members Display */}
-            <div className="overflow-hidden">
-              <div className="flex justify-center items-center min-h-[600px] gap-8">
-                {getVisibleMembers().map((member, index) => {
-                  const isCenter = index === 1;
-                  return (
-                    <div
-                      key={`${member.id}-${currentIndex}`}
-                      className={`team-card group transition-all duration-700 ease-in-out transform ${
-                        isCenter 
-                          ? 'scale-110 z-10 opacity-100 translate-x-0' 
-                          : 'scale-90 opacity-60'
-                      } ${
-                        isAnimating ? 'animate-[slideRightToLeft_0.7s_ease-in-out]' : ''
-                      }`}
-                      style={{
-                        width: '300px',
-                        minWidth: '300px',
-                        transform: isAnimating ? 'translateX(-100%)' : 'translateX(0)',
-                      }}
-                      onMouseEnter={() => setIsPaused(true)}
-                      onMouseLeave={() => setIsPaused(false)}
-                    >
-                      <div className="relative mb-6">
-                        <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-primary/20 group-hover:border-primary/50 transition-all duration-300">
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                          />
-                        </div>
-                        <div className="absolute -top-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-xs font-bold text-primary-foreground">{member.displayIndex + 1}</span>
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold mb-2 gradient-text">
-                        {member.name}
-                      </h3>
-                      
-                      <p className="text-primary font-semibold mb-4">
-                        {member.position}
-                      </p>
-                      
-                      <p className="text-muted-foreground leading-relaxed mb-6">
-                        {member.bio}
-                      </p>
-                      
-                      {/* Social Media Buttons */}
-                      <div className="flex justify-center gap-3 mb-4">
-                        <a
-                          href={member.social.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
-                        >
-                          <Instagram className="h-4 w-4" />
-                        </a>
-                        <a
-                          href={member.social.facebook}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
-                        >
-                          <Facebook className="h-4 w-4" />
-                        </a>
-                        <a
-                          href={member.social.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
-                        >
-                          <Linkedin className="h-4 w-4" />
-                        </a>
-                      </div>
-                      
-                      {/* Decorative elements */}
-                      <div className="absolute top-4 right-4 w-12 h-12 bg-primary/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="absolute bottom-4 left-4 w-8 h-8 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{animationDelay: '0.1s'}}></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {teamMembers.map((member) => (
+              <Card key={member.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-105 bg-card border border-border hover:border-primary/50">
+                <CardContent className="p-6 text-center">
+                  <div className="relative mb-6">
+                    <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-primary/20 group-hover:border-primary/50 transition-all duration-300">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Indicators */}
-            <div className="flex justify-center mt-8 space-x-2">
-              {teamMembers.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (!isAnimating) {
-                      setIsAnimating(true);
-                      setCurrentIndex(index);
-                      setTimeout(() => setIsAnimating(false), 500);
-                    }
-                  }}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentIndex 
-                      ? 'bg-primary scale-125' 
-                      : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                  }`}
-                  disabled={isAnimating}
-                />
-              ))}
-            </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-2 gradient-text">
+                    {member.name}
+                  </h3>
+                  
+                  <p className="text-primary font-semibold mb-4">
+                    {member.position}
+                  </p>
+                  
+                  <p className="text-muted-foreground leading-relaxed mb-6">
+                    {member.bio}
+                  </p>
+                  
+                  {/* Social Media Buttons */}
+                  <div className="flex justify-center gap-3">
+                    <a
+                      href={member.social.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                    >
+                      <Instagram className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={member.social.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                    >
+                      <Facebook className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={member.social.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-full bg-card border border-border hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                    >
+                      <Linkedin className="h-4 w-4" />
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
