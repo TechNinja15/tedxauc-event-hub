@@ -121,8 +121,6 @@ const Speakers = () => {
             {/* Speakers Container */}
             <div
               ref={scrollRef}
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
               className="overflow-x-hidden mx-12"
             >
               <div className={`flex gap-8 ${!isPaused ? 'animate-scroll' : ''}`}>
@@ -131,6 +129,8 @@ const Speakers = () => {
                   <div
                     key={`${speaker.id}-${index}`}
                     className="flex-shrink-0 w-64 text-center"
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
                   >
                     <div className="relative overflow-hidden rounded-2xl mb-4 group">
                       <img
