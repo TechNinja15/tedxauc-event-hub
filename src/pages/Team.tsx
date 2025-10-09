@@ -1,5 +1,13 @@
-import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState, useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const teamMembers = [
   {
@@ -76,7 +84,84 @@ const teamMembers = [
   }
 ];
 
+const speakers = [
+  {
+    id: 1,
+    name: "Dr. Aisha Rahman",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 2,
+    name: "Rohan Mehta",
+    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 3,
+    name: "Sarah Johnson",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 4,
+    name: "Kabir Singh",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 5,
+    name: "Maya Desai",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 6,
+    name: "Alex Thompson",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 7,
+    name: "Nisha Kapoor",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    id: 8,
+    name: "Michael Chen",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face",
+  },
+];
+
 const Team = () => {
+  const [isPaused, setIsPaused] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  const handlePrevious = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const handleNext = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
+  const handleSpeakerRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name'),
+      gender: formData.get('gender'),
+      occupation: formData.get('occupation'),
+      message: formData.get('message'),
+    };
+    
+    toast({
+      title: "Registration Submitted!",
+      description: "Thank you for your interest. We'll get back to you soon.",
+    });
+    
+    e.currentTarget.reset();
+  };
+
   return (
     <div className="pt-24">
       {/* Hero Section */}
@@ -153,6 +238,151 @@ const Team = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Speakers Section */}
+      <section className="section-padding bg-gradient-to-br from-background to-primary/5">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-5xl font-bold mb-6">
+              Our <span className="gradient-text">Speakers</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Meet the inspiring voices who share ideas worth spreading
+            </p>
+          </div>
+
+          <div className="relative group">
+            {/* Navigation Arrows */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-card/80 backdrop-blur-sm border-primary/50 hover:bg-primary/20"
+              onClick={handlePrevious}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-card/80 backdrop-blur-sm border-primary/50 hover:bg-primary/20"
+              onClick={handleNext}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+
+            {/* Scrolling Container */}
+            <div
+              ref={scrollRef}
+              className="overflow-hidden"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <div 
+                className={`flex gap-8 ${isPaused ? '' : 'animate-scroll'}`}
+                style={{
+                  width: 'max-content',
+                }}
+              >
+                {/* Duplicate speakers for infinite loop effect */}
+                {[...speakers, ...speakers].map((speaker, index) => (
+                  <div
+                    key={`${speaker.id}-${index}`}
+                    className="flex-shrink-0 w-64 text-center"
+                  >
+                    <div className="relative mb-4 group/card">
+                      <div className="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-primary/30 group-hover/card:border-primary transition-all duration-300 group-hover/card:scale-105">
+                        <img
+                          src={speaker.image}
+                          alt={speaker.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-bold gradient-text">
+                      {speaker.name}
+                    </h3>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Register Button */}
+          <div className="text-center mt-12">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="hero-button">
+                  Register as a Speaker
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px] bg-card border-border">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl gradient-text">Speaker Registration</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSpeakerRegister} className="space-y-6 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="Enter your full name"
+                      required
+                      className="bg-input border-border focus:border-primary"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="gender">Gender *</Label>
+                    <Select name="gender" required>
+                      <SelectTrigger className="bg-input border-border focus:border-primary">
+                        <SelectValue placeholder="Select your gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="non-binary">Non-Binary</SelectItem>
+                        <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="occupation">Occupation *</Label>
+                    <Input
+                      id="occupation"
+                      name="occupation"
+                      placeholder="Enter your occupation"
+                      required
+                      className="bg-input border-border focus:border-primary"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Tell us about your idea *</Label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      placeholder="Share your idea worth spreading..."
+                      required
+                      rows={5}
+                      className="bg-input border-border focus:border-primary resize-none"
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full hero-button">
+                    Submit Registration
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </section>
